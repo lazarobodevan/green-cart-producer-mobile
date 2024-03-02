@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
         },
         onGenerateRoute: (settings){
           if(settings.name == "/product"){
-            return MaterialPageRoute(builder: (context) => ProductScreen(product: settings.arguments as ProductModel?,));
+            return MaterialPageRoute(builder: (context) => ProductScreen(product: settings.arguments as ProductModel?));
           }
         },
       ),

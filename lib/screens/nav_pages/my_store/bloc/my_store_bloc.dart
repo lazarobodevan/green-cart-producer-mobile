@@ -13,12 +13,14 @@ class MyStoreBloc extends Bloc<MyStoreEvent, MyStoreState> {
   MyStoreBloc({required this.productService}) : super(MyStoreLoadingState()) {
     on<MyStoreLoadProductsEvent>((event, emit) async {
       try{
-        var producer = await this.productService.getProducerProducts(event.producerId);
+        emit(MyStoreLoadingState());
+        var producer = await productService.getProducerProducts(event.producerId);
 
         emit(MyStoreLoadedState(data: producer));
       }catch(e){
         emit(MyStoreErrorState());
       }
     });
+
   }
 }

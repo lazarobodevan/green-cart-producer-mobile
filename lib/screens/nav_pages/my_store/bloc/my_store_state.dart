@@ -14,7 +14,7 @@ class MyStoreLoadedState extends MyStoreState {
 
   MyStoreLoadedState({required this.data});
   @override
-  List<Object> get props => [];
+  List<Object> get props => [data];
 }
 
 class MyStoreErrorState extends MyStoreState {

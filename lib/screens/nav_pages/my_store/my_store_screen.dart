@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_producer/screens/nav_pages/my_store/bloc/my_store_bloc.dart';
+import 'package:mobile_producer/screens/product_screen/bloc/product_bloc.dart';
 import 'package:mobile_producer/services/product_service.dart';
 import 'package:mobile_producer/shared/components/custom_app_bar.dart';
 import 'package:mobile_producer/shared/components/custom_icon_button.dart';
@@ -20,68 +21,91 @@ class MyStoreScreen extends StatelessWidget {
           productService: RepositoryProvider.of<ProductService>(context))
         ..add(MyStoreLoadProductsEvent(
             producerId: "f31f3139-e991-430e-9056-94f5b1ec7c57")),
-      child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed("/product");
-          },
-          shape: CircleBorder(),
-          backgroundColor: ThemeColors.primary3,
-          child: const Center(
-            child: Icon(
-              Icons.add,
-              color: ThemeColors.white,
+      child: BlocListener<ProductBloc, ProductState>(
+        listener: (context, state) {
+          if (state is NewProductAddedState) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text("Produto adicionado com sucesso!")));
+            BlocProvider.of<MyStoreBloc>(context).add(MyStoreLoadProductsEvent(
+                producerId: "f31f3139-e991-430e-9056-94f5b1ec7c57"));
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              surfaceTintColor: Colors.white,
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(80),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomTextField(
+                        controller: TextEditingController(),
+                        prefixIcon: Icon(Icons.search),
+                        hintText: "Pesquisar...",
+                        onChanged: (String s) {},
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text("Meus produtos", style: TypographyStyles.label1()),
+                    ],
+                  ),
+                ),
+              )),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.pushNamed(context, "/product");
+            },
+            shape: CircleBorder(),
+            backgroundColor: ThemeColors.primary3,
+            child: const Center(
+              child: Icon(
+                Icons.add,
+                color: ThemeColors.white,
+              ),
             ),
           ),
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomTextField(
-                  controller: TextEditingController(),
-                  prefixIcon: Icon(Icons.search),
-                  hintText: "Pesquisar...",
-                  onChanged: (String s) {},
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text("Meus produtos", style: TypographyStyles.label1()),
-                const SizedBox(
-                  height: 16,
-                ),
-                BlocBuilder<MyStoreBloc, MyStoreState>(
-                  builder: (context, state) {
-                    if (state is MyStoreLoadingState) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BlocBuilder<MyStoreBloc, MyStoreState>(
+                    builder: (context, state) {
+                      if (state is MyStoreLoadingState) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
 
-                    if (state is MyStoreLoadedState) {
-                      var data = state.data;
-                      var products = data.products.data;
-                      return Expanded(
-                        child: products.isNotEmpty
-                            ? GridView.count(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 10,
-                                childAspectRatio: 0.8,
-                                children: products
-                                    .map((element) =>
-                                        ProductCard(product: element))
-                                    .toList())
-                            : getAddNewProduct(context),
-                      );
-                    }
+                      if (state is MyStoreLoadedState) {
+                        var data = state.data;
+                        var products = data.products.data;
+                        return Expanded(
+                          child: products.isNotEmpty
+                              ? GridView.count(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  childAspectRatio: 0.8,
+                                  children: products
+                                      .map((element) =>
+                                          ProductCard(product: element))
+                                      .toList())
+                              : getAddNewProduct(context),
+                        );
+                      }
 
-                    return Center(child: Text("Oops"));
-                  },
-                )
-              ],
+                      return Center(child: Text("Oops"));
+                    },
+                  )
+                ],
+              ),
             ),
           ),
         ),

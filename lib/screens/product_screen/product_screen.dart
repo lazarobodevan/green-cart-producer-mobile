@@ -84,8 +84,8 @@ class ProductScreen extends StatelessWidget {
 
         if (index < pictures.length) {
           pictures[index] = picture;
-          metadata[index] =
-              ProductPictureMetadataModel(name: basename(picture.path), position: index);
+          metadata[index] = ProductPictureMetadataModel(
+              name: basename(picture.path), position: index);
         } else {
           pictures.add(picture);
           metadata.add(ProductPictureMetadataModel(
@@ -96,210 +96,219 @@ class ProductScreen extends StatelessWidget {
       }
     }
 
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: isAddNewProduct ? "Adicionar produto" : "Editar produto",
-      ),
-      body: BlocBuilder<ProductBloc, ProductState>(
-        bloc: BlocProvider.of<ProductBloc>(context),
-        builder: (context, state) {
-          var bloc = BlocProvider.of<ProductBloc>(context);
+    return BlocProvider(
+      create: (context) => MyStoreBloc(
+          productService: RepositoryProvider.of<ProductService>(context)),
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: isAddNewProduct ? "Adicionar produto" : "Editar produto",
+        ),
+        body: BlocListener<ProductBloc, ProductState>(
+          listener: (context, state) async {
+            if (state is NewProductAddedState) {
+              await Future.delayed(Duration.zero);
+              Navigator.of(context).pop();
+            }
+          },
+          child: BlocBuilder<ProductBloc, ProductState>(
+            bloc: BlocProvider.of<ProductBloc>(context),
+            builder: (context, state) {
+              var bloc = BlocProvider.of<ProductBloc>(context);
 
-          bool isActive = true;
-          bool isLoading = false;
+              bool isActive = true;
+              bool isLoading = false;
 
-          if(state is NewProductAddingState){
-            isActive = false;
-            isLoading = true;
-          }
+              if (state is NewProductAddingState) {
+                isActive = false;
+                isLoading = true;
+              }
 
-          if(state is NewProductAddedState){
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Produto adicionado com sucesso!!")));
-            BlocProvider.of<MyStoreBloc>(context).add(MyStoreLoadProductsEvent(producerId: "f31f3139-e991-430e-9056-94f5b1ec7c57"));
-            Navigator.of(context).pop();
-          }
-
-
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-
-                //Pictures
-                Column(
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Fotos do produto (${bloc.product.picturesMetadata.length}/5)",
-                            style: TypographyStyles.label2(),
-                          ),
-                          CustomLink(text: "Editar", onTap: () {})
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    SizedBox(
-                      height: 120,
-                      child: ListView.separated(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return Center(
-                              child: PictureCard(
-                                index: index,
-                                onChanged: (picture, index) {
-                                  _onChangedPicture(picture, index);
-                                },
-                              ),
-                            );
-                          },
-                          separatorBuilder: (context, index) {
-                            return SizedBox(
-                              width: 10,
-                            );
-                          },
-                          itemCount: bloc.product.picturesMetadata.length < 5
-                              ? bloc.product.picturesMetadata.length + 1
-                              : bloc.product.picturesMetadata.length),
-                    )
-                  ],
-                ),
-
-                //Form
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    //Pictures
+                    Column(
                       children: [
-                        CustomTextField(
-                          label: "Nome",
-                          hintText: "Ex: Banana prata",
-                          controller: _nameController,
-                          onChanged: (String name) =>
-                              bloc.add(UpdateProductEvent(name: name)),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomTextField(
-                          label: "Descrição",
-                          hintText:
-                              "Ex: Banana prata doce cultivada no meu quintal...",
-                          controller: _descController,
-                          onChanged: (String desc) =>
-                              bloc.add(UpdateProductEvent(description: desc)),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.45,
-                              child: CustomTextField(
-                                  label: "Preço",
-                                  hintText: "Ex: 1,85",
-                                  controller: _priceController,
-                                  keyboardType: TextInputType.number,
-                                  onChanged: _onChangedPrice),
-                            ),
-                            CustomDropdownButton(
-                                options: productCategories,
-                                text: "Categoria",
-                                onChanged: _onChangedCategory),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.45,
-                              child: CustomTextField(
-                                label: "Quantidade disponível",
-                                hintText: "Ex: 10",
-                                controller: _availableQuantityController,
-                                keyboardType: TextInputType.number,
-                                onChanged: _onChangedPrice,
-                                textInputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly
-                                ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Fotos do produto (${bloc.product.picturesMetadata.length}/5)",
+                                style: TypographyStyles.label2(),
                               ),
-                            ),
-                            CustomDropdownButton(
-                                options: productUnits,
-                                text: "Unidade",
-                                onChanged: _onChangedUnit)
-                          ],
+                              CustomLink(text: "Editar", onTap: () {})
+                            ],
+                          ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          height: 120,
+                          child: ListView.separated(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return Center(
+                                  child: PictureCard(
+                                    index: index,
+                                    onChanged: (picture, index) {
+                                      _onChangedPicture(picture, index);
+                                    },
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return SizedBox(
+                                  width: 10,
+                                );
+                              },
+                              itemCount:
+                                  bloc.product.picturesMetadata.length < 5
+                                      ? bloc.product.picturesMetadata.length + 1
+                                      : bloc.product.picturesMetadata.length),
+                        )
+                      ],
+                    ),
+
+                    //Form
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.45,
-                                child: CustomDatePicker(
-                                  text: "Data da colheita",
-                                  onChanged: (date) {
-                                    _onChangedHarvestDate(date);
-                                  },
-                                )),
-                            Column(
+                            CustomTextField(
+                              label: "Nome",
+                              hintText: "Ex: Banana prata",
+                              controller: _nameController,
+                              onChanged: (String name) =>
+                                  bloc.add(UpdateProductEvent(name: name)),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            CustomTextField(
+                              label: "Descrição",
+                              hintText:
+                                  "Ex: Banana prata doce cultivada no meu quintal...",
+                              controller: _descController,
+                              onChanged: (String desc) => bloc
+                                  .add(UpdateProductEvent(description: desc)),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "Orgânico?",
-                                  style: TypographyStyles.paragraph3(),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.45,
+                                  child: CustomTextField(
+                                      label: "Preço",
+                                      hintText: "Ex: 1,85",
+                                      controller: _priceController,
+                                      keyboardType: TextInputType.number,
+                                      onChanged: _onChangedPrice),
                                 ),
-                                CustomSwitchButton(onChanged: (value) {
-                                  _onChangedIsOrganic(value);
-                                }),
+                                CustomDropdownButton(
+                                    options: productCategories,
+                                    text: "Categoria",
+                                    onChanged: _onChangedCategory),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.45,
+                                  child: CustomTextField(
+                                    label: "Quantidade disponível",
+                                    hintText: "Ex: 10",
+                                    controller: _availableQuantityController,
+                                    keyboardType: TextInputType.number,
+                                    onChanged: _onChangedPrice,
+                                    textInputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                  ),
+                                ),
+                                CustomDropdownButton(
+                                    options: productUnits,
+                                    text: "Unidade",
+                                    onChanged: _onChangedUnit)
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.45,
+                                    child: CustomDatePicker(
+                                      text: "Data da colheita",
+                                      onChanged: (date) {
+                                        _onChangedHarvestDate(date);
+                                      },
+                                    )),
+                                Column(
+                                  children: [
+                                    Text(
+                                      "Orgânico?",
+                                      style: TypographyStyles.paragraph3(),
+                                    ),
+                                    CustomSwitchButton(onChanged: (value) {
+                                      _onChangedIsOrganic(value);
+                                    }),
+                                  ],
+                                ),
                               ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                //Button
-                Column(
-                  children: [
-                    SizedBox(
-                      height: 100,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: CustomButton(
-                          isActive: isActive,
-                          isLoading: isLoading,
-                          onTap: () {
-                            bloc.add(
-                                AddNewProductEvent(productModel: bloc.product));
-                          },
-                          text: "Cadastrar",
-                        ),
                       ),
+                    ),
+
+                    //Button
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 100,
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: CustomButton(
+                              isActive: isActive,
+                              isLoading: isLoading,
+                              onTap: () async {
+                                bloc.add(AddNewProductEvent(
+                                    productModel: bloc.product));
+                              },
+                              text: "Cadastrar",
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          );
-        },
+              );
+            },
+          ),
+        ),
       ),
     );
   }
