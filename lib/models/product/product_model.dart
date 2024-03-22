@@ -61,6 +61,7 @@ class ProductModel {
     createdAt = DateTime.now(),
     updatedAt = DateTime.now(),
     deletedAt = DateTime.now();
+  
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
     id: json["id"],

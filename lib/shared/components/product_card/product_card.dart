@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_producer/models/product/product_model.dart';
+import 'package:mobile_producer/screens/update_product_screen/update_product_screen.dart';
 import 'package:mobile_producer/theme/theme_colors.dart';
 import 'package:mobile_producer/theme/typography_styles.dart';
 
@@ -11,7 +12,7 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed("/productDetails", arguments: product.id);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateProductScreen(productId: product.id,)));
       },
       child: Ink(
         decoration: BoxDecoration(
@@ -49,7 +50,7 @@ class ProductCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("R\$${product.price}", style: TypographyStyles.label2(),),
+                      Text("R\$${product.price.toStringAsFixed(2).replaceAll(".", ",")}", style: TypographyStyles.label2(),),
                       Text("1 ${product.unit}", style: TypographyStyles.paragraph4().copyWith(color: ThemeColors.gray6),),
                     ],
                   ),

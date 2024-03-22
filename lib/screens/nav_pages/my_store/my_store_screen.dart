@@ -20,14 +20,16 @@ class MyStoreScreen extends StatelessWidget {
       create: (context) => MyStoreBloc(
           productService: RepositoryProvider.of<ProductService>(context))
         ..add(MyStoreLoadProductsEvent(
-            producerId: "f31f3139-e991-430e-9056-94f5b1ec7c57")),
+            producerId: "3b264476-7b70-4f2d-b106-447481ea569a")),
+
       child: BlocListener<ProductBloc, ProductState>(
         listener: (context, state) {
+
           if (state is NewProductAddedState) {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text("Produto adicionado com sucesso!")));
             BlocProvider.of<MyStoreBloc>(context).add(MyStoreLoadProductsEvent(
-                producerId: "f31f3139-e991-430e-9056-94f5b1ec7c57"));
+                producerId: "3b264476-7b70-4f2d-b106-447481ea569a"));
           }
         },
         child: Scaffold(
@@ -36,7 +38,7 @@ class MyStoreScreen extends StatelessWidget {
               automaticallyImplyLeading: false,
               surfaceTintColor: Colors.white,
               bottom: PreferredSize(
-                preferredSize: Size.fromHeight(80),
+                preferredSize: const Size.fromHeight(80),
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
@@ -44,7 +46,7 @@ class MyStoreScreen extends StatelessWidget {
                     children: [
                       CustomTextField(
                         controller: TextEditingController(),
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: const Icon(Icons.search),
                         hintText: "Pesquisar...",
                         onChanged: (String s) {},
                       ),
@@ -58,9 +60,9 @@ class MyStoreScreen extends StatelessWidget {
               )),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.pushNamed(context, "/product");
+              Navigator.pushNamed(context, "/product",arguments: null);
             },
-            shape: CircleBorder(),
+            shape: const CircleBorder(),
             backgroundColor: ThemeColors.primary3,
             child: const Center(
               child: Icon(
@@ -78,7 +80,7 @@ class MyStoreScreen extends StatelessWidget {
                   BlocBuilder<MyStoreBloc, MyStoreState>(
                     builder: (context, state) {
                       if (state is MyStoreLoadingState) {
-                        return Center(
+                        return const Center(
                           child: CircularProgressIndicator(),
                         );
                       }
@@ -101,7 +103,7 @@ class MyStoreScreen extends StatelessWidget {
                         );
                       }
 
-                      return Center(child: Text("Oops"));
+                      return Center(child: Text("Ocorreu um erro ao buscar no servidor..."));
                     },
                   )
                 ],

@@ -27,14 +27,12 @@ import 'package:mobile_producer/theme/typography_styles.dart';
 import 'package:path/path.dart';
 
 class ProductScreen extends StatelessWidget {
-  final ProductModel? product;
 
-  const ProductScreen({super.key, this.product});
+  const ProductScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var isAddNewProduct = product == null;
-    var bloc = BlocProvider.of<ProductBloc>(context);
+    var bloc = BlocProvider.of<ProductBloc>(context)..add(ResetProductEvent());
 
     final GlobalKey _formKey = GlobalKey();
     DateFormat formatter = DateFormat("dd/MM/yyyy");
@@ -73,10 +71,6 @@ class ProductScreen extends StatelessWidget {
       }
     }
 
-    if (product == null) {
-      bloc.add(ResetProductEvent());
-    }
-
     _onChangedPicture(File? picture, int index) {
       if (picture != null) {
         var pictures = bloc.product.pictures;
@@ -100,8 +94,8 @@ class ProductScreen extends StatelessWidget {
       create: (context) => MyStoreBloc(
           productService: RepositoryProvider.of<ProductService>(context)),
       child: Scaffold(
-        appBar: CustomAppBar(
-          title: isAddNewProduct ? "Adicionar produto" : "Editar produto",
+        appBar: const CustomAppBar(
+          title: "Adicionar produto",
         ),
         body: BlocListener<ProductBloc, ProductState>(
           listener: (context, state) async {
@@ -150,28 +144,27 @@ class ProductScreen extends StatelessWidget {
                         SizedBox(
                           height: 120,
                           child: ListView.separated(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return Center(
-                                  child: PictureCard(
-                                    index: index,
-                                    onChanged: (picture, index) {
-                                      _onChangedPicture(picture, index);
-                                    },
-                                  ),
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return SizedBox(
-                                  width: 10,
-                                );
-                              },
-                              itemCount:
-                                  bloc.product.picturesMetadata.length < 5
-                                      ? bloc.product.picturesMetadata.length + 1
-                                      : bloc.product.picturesMetadata.length),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return Center(
+                                child: PictureCard(
+                                  index: index,
+                                  onChanged: (picture, index) {
+                                    _onChangedPicture(picture, index);
+                                  },
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return const SizedBox(
+                                width: 10,
+                              );
+                            },
+                            itemCount: bloc.product.picturesMetadata.length < 5
+                                ? bloc.product.picturesMetadata.length + 1
+                                : bloc.product.picturesMetadata.length,
+                          ),
                         )
                       ],
                     ),

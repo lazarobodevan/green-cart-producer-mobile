@@ -9,6 +9,7 @@ import 'package:mobile_producer/screens/nav_pages/main_nav_page.dart';
 import 'package:mobile_producer/screens/order_details_screen/order_details_screen.dart';
 import 'package:mobile_producer/screens/product_screen/bloc/product_bloc.dart';
 import 'package:mobile_producer/screens/product_screen/product_screen.dart';
+import 'package:mobile_producer/screens/update_product_screen/bloc/update_product_bloc.dart';
 import 'package:mobile_producer/services/product_service.dart';
 import 'package:mobile_producer/shared/repositories/geolocation/geolocation_repository.dart';
 
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(
           create: (context) => GeolocationRepository(),
         ),
-        BlocProvider(create: (context) => ProductBloc(productService: RepositoryProvider.of<ProductService>(context)))
+        BlocProvider(create: (context) => ProductBloc(productService: RepositoryProvider.of<ProductService>(context))),
+        BlocProvider(create: (context) => UpdateProductBloc(productService: RepositoryProvider.of<ProductService>(context)))
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -48,7 +50,7 @@ class MyApp extends StatelessWidget {
         },
         onGenerateRoute: (settings){
           if(settings.name == "/product"){
-            return MaterialPageRoute(builder: (context) => ProductScreen(product: settings.arguments as ProductModel?));
+            return MaterialPageRoute(builder: (context) => ProductScreen());
           }
         },
       ),

@@ -33,7 +33,7 @@ class ProductService{
       request.fields["price"] = productModel.price.toString();
       request.fields["category"] = productModel.category;
       request.fields["isOrganic"] = productModel.isOrganic.toString();
-      request.fields["producerId"] = "f31f3139-e991-430e-9056-94f5b1ec7c57";
+      request.fields["producerId"] = "3b264476-7b70-4f2d-b106-447481ea569a";
       request.fields["description"] = productModel.description;
       request.fields["harvestDate"] = productModel.harvestDate;
       request.fields["availableQuantity"] = productModel.availableQuantity.toString();
@@ -43,8 +43,6 @@ class ProductService{
         request.fields["PicturesMetadata[$i][Position]"] = productModel.picturesMetadata[i].position.toString();
       }
 
-      request.fields["PicturesMetadata[0][Name]"] = productModel.picturesMetadata[0].name;
-      request.fields["PicturesMetadata[0][Position]"] = productModel.picturesMetadata[0].position.toString();
       var picturesMultipart = await HttpUtils().convertFilesToMultipart(productModel.pictures);
       for(var pic in picturesMultipart){
         request.files.add(pic);
@@ -65,5 +63,20 @@ class ProductService{
       rethrow;
     }
   }
+
+  getProductById(String id) async {
+    try {
+      Response response = await get(
+          Uri.parse("${Environment.apiUrl}/Product/id=$id"));
+      if (response.statusCode == 200) {
+        var productDetails = productModelFromJson(response.body);
+        return productDetails;
+      }
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
 
 }

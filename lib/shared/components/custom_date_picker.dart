@@ -42,8 +42,8 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
     if (picked != null && picked != date) {
       setState(() {
         date = picked;
+        _dateController.text = formatter.format(date!);
       });
-
       return date;
     }
   }
@@ -60,7 +60,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
         child: SizedBox(
           child: CustomTextField(
             onChanged: (s) {},
-            label: _date != null ? formatter.format(_date!) :widget.text,
+            label: widget.text,
             controller: _dateController,
           ),
         ),

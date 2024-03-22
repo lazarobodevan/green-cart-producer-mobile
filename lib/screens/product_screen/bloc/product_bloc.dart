@@ -15,7 +15,7 @@ part 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final ProductService productService;
-  late PostProductModel _product; // Usando 'late' para garantir a inicialização
+  late PostProductModel _product;
 
   ProductBloc({required this.productService})
       : super(ProductInitial()) {
@@ -39,7 +39,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
     on<ResetProductEvent>((event, emit) async {
       _product = PostProductModel.empty();
-      //emit(NewProductState(product: _product));
+      emit(NewProductState(product: _product));
     });
 
     on<AddNewProductEvent>((event, emit) async {
