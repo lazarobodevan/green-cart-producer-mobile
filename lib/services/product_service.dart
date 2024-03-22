@@ -36,7 +36,7 @@ class ProductService{
       request.fields["producerId"] = "3b264476-7b70-4f2d-b106-447481ea569a";
       request.fields["description"] = productModel.description;
       request.fields["harvestDate"] = productModel.harvestDate;
-      request.fields["availableQuantity"] = productModel.availableQuantity.toString();
+      request.fields["AvailableQuantity"] = productModel.availableQuantity.toString();
 
       for(var i = 0; i < productModel.picturesMetadata.length; i++){
         request.fields["PicturesMetadata[$i][Name]"] = productModel.picturesMetadata[i].name;

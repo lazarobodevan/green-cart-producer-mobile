@@ -71,6 +71,10 @@ class ProductScreen extends StatelessWidget {
       }
     }
 
+    _onChangedAvailableQuantity(String value){
+      bloc.add(UpdateProductEvent(availableQuantity: int.parse(value)));
+    }
+
     _onChangedPicture(File? picture, int index) {
       if (picture != null) {
         var pictures = bloc.product.pictures;
@@ -121,6 +125,10 @@ class ProductScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(bloc.product.availableQuantity.toString()),
+                    ),
                     //Pictures
                     Column(
                       children: [
@@ -233,7 +241,7 @@ class ProductScreen extends StatelessWidget {
                                     hintText: "Ex: 10",
                                     controller: _availableQuantityController,
                                     keyboardType: TextInputType.number,
-                                    onChanged: _onChangedPrice,
+                                    onChanged: _onChangedAvailableQuantity,
                                     textInputFormatters: [
                                       FilteringTextInputFormatter.digitsOnly
                                     ],
