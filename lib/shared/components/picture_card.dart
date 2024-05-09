@@ -33,10 +33,9 @@ class _PictureCardState extends State<PictureCard> {
     super.initState();
     _picture = widget.picture;
     _pictureUrl = widget.pictureUrl;
-    setState(() {
-
-    });
+    setState(() {});
   }
+
   @override
   void dispose() {
     super.dispose();
@@ -59,7 +58,7 @@ class _PictureCardState extends State<PictureCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        if(widget.isActive == false){
+        if (widget.isActive == false) {
           return;
         }
         var picture = await _picImageFromCamera();
@@ -68,7 +67,9 @@ class _PictureCardState extends State<PictureCard> {
       child: DottedBorder(
         radius: Radius.circular(12),
         borderType: BorderType.RRect,
-        color: widget.pictureUrl == null && widget.picture == null ? ThemeColors.gray3 : Colors.transparent,
+        color: widget.pictureUrl == null && widget.picture == null
+            ? ThemeColors.gray3
+            : Colors.transparent,
         dashPattern: [8, 4],
         child: _pictureUrl != null
             ? Ink(
@@ -78,6 +79,18 @@ class _PictureCardState extends State<PictureCard> {
                   widget.pictureUrl!,
                   fit: BoxFit.cover,
                   key: UniqueKey(),
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
                 ))
             : _picture != null
                 ? Ink(

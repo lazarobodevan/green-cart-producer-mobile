@@ -5,6 +5,7 @@ import 'package:mobile_producer/environment.dart';
 import 'package:mobile_producer/models/producer/producer_products_request_model.dart';
 import 'package:mobile_producer/models/product/post_request_models/post_product_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile_producer/models/product/post_request_models/update_product_model.dart';
 import 'package:mobile_producer/models/product/product_model.dart';
 import 'package:mobile_producer/shared/utils/http_utils.dart';
 class ProductService{
@@ -73,6 +74,19 @@ class ProductService{
         return productDetails;
       }
     } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  updateProduct(UpdateProductModel product) async {
+    try{
+      Response response = await put(Uri.parse("${Environment.apiUrl}/Product"), body: updateProductModelToJson(product));
+      if(response.statusCode == 200){
+        var updatedProduct = response.body;
+        return updatedProduct;
+      }
+    }catch(e){
       print(e);
       rethrow;
     }

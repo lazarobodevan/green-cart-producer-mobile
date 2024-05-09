@@ -11,7 +11,7 @@ import 'package:mobile_producer/models/product/product_picture_model.dart';
 UpdateProductModel updateProductModelFromJson(String str) =>
     UpdateProductModel.fromJson(json.decode(str));
 
-//String updateProductModelToJson(UpdateProductModel data) => json.encode(data.toJson());
+String updateProductModelToJson(UpdateProductModel data) => json.encode(data.toJson());
 
 class UpdateProductModel {
   String id;
@@ -98,7 +98,24 @@ class UpdateProductModel {
         isOrganic: json["isOrganic"],
         harvestDate: DateTime.parse(json["harvestDate"]),
       );
+
+   toJson() =>{
+    "id": id,
+    "name": name,
+    "description": description,
+    "pictures": pictures != null
+        ? List<dynamic>.from(pictures!.map((x) => x.toJson()))
+        : null,
+    "category": category,
+    "price": price,
+    "unit": unit,
+    "availableQuantity": availableQuantity,
+    "isOrganic": isOrganic,
+    "harvestDate": harvestDate.toIso8601String(),
+  };
 }
+
+
 
 class Picture {
   String url;
