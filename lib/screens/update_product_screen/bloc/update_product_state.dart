@@ -44,6 +44,26 @@ class UpdateProductLoadedState extends UpdateProductState{
   List<Object?> get props => [];
 }
 
+class SendingUpdateProductState extends UpdateProductState{
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+
+}
+
+class SendedUpdateProductState extends UpdateProductState{
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+
+}
+
+class ErrorSendingUpdateProductState extends UpdateProductState{
+  @override
+  List<Object?> get props => [];
+
+}
+
 class UpdateProductErrorState extends UpdateProductState{
   @override
   List<Object?> get props =>[];

@@ -39,6 +39,15 @@ class UpdateProductInfoEvent extends UpdateProductEvent {
   List<Object?> get props => [];
 }
 
+class SendUpdateProductEvent extends UpdateProductEvent{
+  final UpdateProductModel productModel;
+
+  const SendUpdateProductEvent({required this.productModel});
+
+  @override
+  List<Object?> get props =>[productModel];
+}
+
 class UpdatePicturesEvent extends UpdateProductEvent {
   final List<ProductPictureModel> picturesFromServer;
   final List<File?> newPictures;

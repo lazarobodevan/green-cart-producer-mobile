@@ -81,7 +81,10 @@ class ProductService{
 
   updateProduct(UpdateProductModel product) async {
     try{
-      Response response = await put(Uri.parse("${Environment.apiUrl}/Product"), body: updateProductModelToJson(product));
+      Response response = await put(Uri.parse("${Environment.apiUrl}/Product/"), body: updateProductModelToJson(product), headers: {
+        "content-type" : "application/json",
+        "accept" : "application/json",
+      },);
       if(response.statusCode == 200){
         var updatedProduct = response.body;
         return updatedProduct;

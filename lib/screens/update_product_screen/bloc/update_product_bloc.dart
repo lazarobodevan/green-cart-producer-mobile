@@ -59,8 +59,17 @@ class UpdateProductBloc extends Bloc<UpdateProductEvent, UpdateProductState> {
         isOrganic: event.isOrganic,
         harvestDate: event.harvestDate,
       );
-      print(productModel.name);
       emit(UpdateInfoState(productModel: productModel));
+    });
+
+    on<SendUpdateProductEvent>((event, emit)async{
+      emit(SendingUpdateProductState());
+      try{
+        await ProductService().updateProduct(productModel);
+        emit(SendedUpdateProductState());
+      }catch(e){
+        emit(ErrorSendingUpdateProductState());
+      }
     });
   }
 

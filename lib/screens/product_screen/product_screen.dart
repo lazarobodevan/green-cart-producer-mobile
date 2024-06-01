@@ -125,10 +125,6 @@ class ProductScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(bloc.product.availableQuantity.toString()),
-                    ),
                     //Pictures
                     Column(
                       children: [

@@ -5,6 +5,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:intl/intl.dart';
 import 'package:mobile_producer/models/product/post_request_models/product_picture_file_model.dart';
 import 'package:mobile_producer/models/product/product_picture_model.dart';
 
@@ -111,7 +112,7 @@ class UpdateProductModel {
     "unit": unit,
     "availableQuantity": availableQuantity,
     "isOrganic": isOrganic,
-    "harvestDate": harvestDate.toIso8601String(),
+    "harvestDate": DateFormat("dd/MM/yyyy").format(harvestDate),
   };
 }
 
