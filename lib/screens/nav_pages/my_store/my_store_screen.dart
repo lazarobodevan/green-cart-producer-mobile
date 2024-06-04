@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_producer/screens/nav_pages/my_store/bloc/my_store_bloc.dart';
-import 'package:mobile_producer/screens/product_screen/bloc/product_bloc.dart';
 import 'package:mobile_producer/services/product_service.dart';
+import 'package:mobile_producer/shared/blocs/product_bloc/product_bloc.dart';
 import 'package:mobile_producer/shared/components/custom_app_bar.dart';
 import 'package:mobile_producer/shared/components/custom_icon_button.dart';
 import 'package:mobile_producer/shared/components/custom_label.dart';
@@ -60,6 +60,7 @@ class MyStoreScreen extends StatelessWidget {
               )),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
+              BlocProvider.of<ProductBloc>(context).add(ResetProductEvent());
               Navigator.pushNamed(context, "/product",arguments: null);
             },
             shape: const CircleBorder(),

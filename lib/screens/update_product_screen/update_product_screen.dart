@@ -160,7 +160,7 @@ class UpdateProductScreen extends StatelessWidget {
                                 "Fotos do produto (${bloc.productModel.pictures!.length}/5)",
                                 style: TypographyStyles.label2(),
                               ),
-                              CustomLink(text: "Editar", onTap: () {})
+                              CustomLink(text: "Editar", onTap: () { Navigator.pushNamed(context, "/updatePictures");})
                             ],
                           ),
                         ),

@@ -4,13 +4,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile_producer/environment.dart';
 import 'package:mobile_producer/models/product/product_model.dart';
 import 'package:mobile_producer/screens/login/login_screen.dart';
+import 'package:mobile_producer/screens/nav_pages/my_store/bloc/my_store_bloc.dart';
 import 'package:mobile_producer/screens/nav_pages/my_store/my_store_screen.dart';
 import 'package:mobile_producer/screens/nav_pages/main_nav_page.dart';
 import 'package:mobile_producer/screens/order_details_screen/order_details_screen.dart';
-import 'package:mobile_producer/screens/product_screen/bloc/product_bloc.dart';
 import 'package:mobile_producer/screens/product_screen/product_screen.dart';
+import 'package:mobile_producer/screens/update_product_picture/update_product_picture_screen.dart';
 import 'package:mobile_producer/screens/update_product_screen/bloc/update_product_bloc.dart';
 import 'package:mobile_producer/services/product_service.dart';
+import 'package:mobile_producer/shared/blocs/product_bloc/product_bloc.dart';
 import 'package:mobile_producer/shared/repositories/geolocation/geolocation_repository.dart';
 
 Future<void> main() async {
@@ -33,7 +35,8 @@ class MyApp extends StatelessWidget {
           create: (context) => GeolocationRepository(),
         ),
         BlocProvider(create: (context) => ProductBloc(productService: RepositoryProvider.of<ProductService>(context))),
-        BlocProvider(create: (context) => UpdateProductBloc(productService: RepositoryProvider.of<ProductService>(context)))
+        BlocProvider(create: (context) => UpdateProductBloc(productService: RepositoryProvider.of<ProductService>(context))),
+        BlocProvider(create: (context) => MyStoreBloc(productService: RepositoryProvider.of<ProductService>(context)))
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -47,6 +50,7 @@ class MyApp extends StatelessWidget {
           "/home": (context) => NavigationPage(),
           "/myStore": (context) => MyStoreScreen(),
           "/orderDetails": (context) => const OrderDetailsScreen(),
+          "/updatePictures":(context) => const UpdateProductPictureScreen(),
         },
         onGenerateRoute: (settings){
           if(settings.name == "/product"){

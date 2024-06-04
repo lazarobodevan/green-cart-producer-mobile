@@ -7,8 +7,8 @@ ProductPictureMetadataModel productPictureMetadataModelFromJson(String str) => P
 String productPictureMetadataModelToJson(ProductPictureMetadataModel data) => json.encode(data.toJson());
 class ProductPictureMetadataModel{
 
-  final String name;
-  final int position;
+  String name;
+  int position;
 
   ProductPictureMetadataModel({required this.name, required this.position});
 

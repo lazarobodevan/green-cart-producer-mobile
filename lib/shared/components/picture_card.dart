@@ -56,6 +56,21 @@ class _PictureCardState extends State<PictureCard> {
 
   @override
   Widget build(BuildContext context) {
+
+    File? _setImageFile(){
+      setState(() {
+        _picture = widget.picture;
+      });
+      return _picture;
+    }
+
+    String? _setImageURL(){
+      setState(() {
+        _pictureUrl = widget.pictureUrl;
+      });
+
+      return _pictureUrl;
+    }
     return InkWell(
       onTap: () async {
         if (widget.isActive == false) {
@@ -76,7 +91,7 @@ class _PictureCardState extends State<PictureCard> {
                 width: 180,
                 height: 100,
                 child: Image.network(
-                  widget.pictureUrl!,
+                  _setImageURL()!,
                   fit: BoxFit.cover,
                   key: UniqueKey(),
                   loadingBuilder: (BuildContext context, Widget child,
@@ -97,7 +112,7 @@ class _PictureCardState extends State<PictureCard> {
                     width: 180,
                     height: 100,
                     child: Image.file(
-                      _picture!,
+                      _setImageFile()!,
                       fit: BoxFit.cover,
                     ))
                 : Ink(
